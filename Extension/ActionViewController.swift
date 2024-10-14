@@ -12,8 +12,9 @@ import MobileCoreServices
 class ActionViewController: UIViewController {
 
     @IBOutlet var script: UITextView!
-    var pageTitle   = ""
-    var pageURL     = ""
+    var pageTitle       = ""
+    var pageURL         = ""
+    var previousEntry   = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,5 +83,29 @@ class ActionViewController: UIViewController {
         let selectedRange               = script.selectedRange
         script.scrollRangeToVisible(selectedRange)
         
+    }
+    
+    
+    func testSave() {
+        let jsonEncoder     = JSONEncoder()
+        if let dataToSave   = try? jsonEncoder.encode(previousEntry) {
+            let defaults    = UserDefaults.standard
+            defaults.set(dataToSave, forKey: "randomKey")
+        } else {
+            print("failed to save")
+        }
+    }
+    
+    
+    func testLoad() {
+        let defaults            = UserDefaults.standard
+        if let dataToLoad       = defaults.object(forKey: "randomKey") as? Data {
+            let jsonDecoder     = JSONDecoder()
+            do {
+                previousEntry   = try jsonDecoder.decode(String.self, from: dataToLoad)
+            } catch {
+                print("failed to load")
+            }
+        }
     }
 }
