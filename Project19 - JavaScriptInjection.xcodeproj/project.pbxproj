@@ -20,6 +20,7 @@
 		407E8B752CBA30A300D58055 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 407E8B742CBA30A300D58055 /* Base */; };
 		407E8B792CBA30A300D58055 /* Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 407E8B6A2CBA30A300D58055 /* Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		407E8B7F2CBA3BCD00D58055 /* Action.js in Resources */ = {isa = PBXBuildFile; fileRef = 407E8B7E2CBA3BCD00D58055 /* Action.js */; };
+		407E8BBE2CC81F3F00D58055 /* UserScriptsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407E8BBD2CC81F3F00D58055 /* UserScriptsVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 		407E8B742CBA30A300D58055 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		407E8B762CBA30A300D58055 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		407E8B7E2CBA3BCD00D58055 /* Action.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Action.js; sourceTree = "<group>"; };
+		407E8BBD2CC81F3F00D58055 /* UserScriptsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserScriptsVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				407E8B4F2CBA2E7E00D58055 /* AppDelegate.swift */,
 				407E8B512CBA2E7E00D58055 /* SceneDelegate.swift */,
 				407E8B532CBA2E7E00D58055 /* ViewController.swift */,
+				407E8BBD2CC81F3F00D58055 /* UserScriptsVC.swift */,
 				407E8B552CBA2E7E00D58055 /* Main.storyboard */,
 				407E8B5B2CBA2E8500D58055 /* Assets.xcassets */,
 				407E8B5D2CBA2E8500D58055 /* LaunchScreen.storyboard */,
@@ -242,6 +245,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				407E8BBE2CC81F3F00D58055 /* UserScriptsVC.swift in Sources */,
 				407E8B5A2CBA2E7E00D58055 /* Project19___JavaScriptInjection.xcdatamodeld in Sources */,
 				407E8B542CBA2E7E00D58055 /* ViewController.swift in Sources */,
 				407E8B502CBA2E7E00D58055 /* AppDelegate.swift in Sources */,
