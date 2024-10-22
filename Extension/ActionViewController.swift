@@ -7,14 +7,14 @@
 
 import UIKit
 import MobileCoreServices
-//import UniformTypeIdentifiers
+import UniformTypeIdentifiers
 
 class ActionViewController: UIViewController {
 
     @IBOutlet var script: UITextView!
     var pageTitle       = ""
     var pageURL         = ""
-    var previousEntry   = ""
+    var previousEntries = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,15 +36,18 @@ class ActionViewController: UIViewController {
             if let itemProvider = inputItem.attachments?.first {
                 //kUTTypePropertyList
                 //UTType.propertyList.identifier
-                itemProvider.loadItem(forTypeIdentifier: kUTTypePropertyList as String, options: nil) { [weak self] (dict, error) in
+                itemProvider.loadItem(forTypeIdentifier: UTType.propertyList.identifier, options: nil) { [weak self] (dict, error) in
                     
                     guard let self              = self else { return }
                     guard let itemDictionary    = dict as? NSDictionary else { return }
                     guard let javaScriptValues  = itemDictionary[NSExtensionJavaScriptPreprocessingResultsKey] as? NSDictionary else { return }
                     self.pageTitle              = javaScriptValues["title"] as? String ?? ""
                     self.pageURL                = javaScriptValues["URL"] as? String ?? ""
+                    loadEntries()
                     
-                    DispatchQueue.main.async { self.title = self.pageTitle}
+                    // my issue here was, on autoScript() I kept appending a new line that replicated previous entries before adding the new command
+                    DispatchQueue.main.async { self.script.text = self.previousEntries}
+                    DispatchQueue.main.async { self.title       = self.pageTitle}
                 }
             }
         }
@@ -53,10 +56,14 @@ class ActionViewController: UIViewController {
     
     @IBAction func done() {
         // Return any edited content to the host app (Safari).
+        // 2nd issue was here: I was appending a duplicate to previousEntries again instead of just setting it bare.
+        // ... necessary for when commands are keyed instead of selected from the autoScript()
+        previousEntries                 = script.text
+        saveEntries()
         let item                        = NSExtensionItem()
-        let argument: NSDictionary      = ["customJavaScript": script.text]
+        let argument: NSDictionary      = ["customJavaScript": script.text ?? ""]
         let webDictionary: NSDictionary = [NSExtensionJavaScriptFinalizeArgumentKey: argument]
-        let customJavaScript            = NSItemProvider(item: webDictionary, typeIdentifier: kUTTypePropertyList as String)
+        let customJavaScript            = NSItemProvider(item: webDictionary, typeIdentifier: UTType.propertyList.identifier as String)
         item.attachments                = [customJavaScript]
         
         extensionContext?.completeRequest(returningItems: [item])
@@ -65,18 +72,27 @@ class ActionViewController: UIViewController {
     
     @IBAction func autoScript() {
         let msg                         = "select a prewritten script to execute."
-        let ac                          = UIAlertController(title: "Pick A Script", message: "select", preferredStyle: .alert)
+        let ac                          = UIAlertController(title: "Pick A Script", message: msg, preferredStyle: .alert)
+        //how to append onto an existing string?
         ac.addAction(UIAlertAction(title: "Show Page Title", style: .default, handler: { [weak self] _ in
             guard let self              = self else { return }
-            self.script.text            = "alert(document.title)"
+            self.previousEntries.append("\nalert(document.title)")
+            self.script.text            = previousEntries
         }))
         ac.addAction(UIAlertAction(title: "Redirect To Google", style: .default, handler: { [weak self] _ in
             guard let self              = self else { return }
-            self.script.text            = "window.location.href = \"https://www.google.com\""
-        })) 
+            self.previousEntries.append("\nwindow.location.href = \"https://www.google.com\"")
+            self.script.text            = previousEntries
+        }))
         ac.addAction(UIAlertAction(title: "Redirect To YouTube", style: .default, handler: { [weak self] _ in
             guard let self              = self else { return }
-            self.script.text            = "window.location.href = \"https://www.youtube.com\""
+            self.previousEntries.append("\nwindow.location.href = \"https://www.youtube.com\"")
+            self.script.text            = previousEntries
+        }))
+        ac.addAction(UIAlertAction(title: "Redirect To GitHub", style: .default, handler: { [weak self] _ in
+            guard let self              = self else { return }
+            self.previousEntries.append("\nwindow.location.href = \"https://www.github.com\"")
+            self.script.text            = previousEntries
         }))
         present(ac, animated: true)
     }
@@ -107,23 +123,27 @@ class ActionViewController: UIViewController {
     }
     
     
-    func testSave() {
+    func saveEntries() {
         let jsonEncoder     = JSONEncoder()
-        if let dataToSave   = try? jsonEncoder.encode(previousEntry) {
+        // preventries: String?
+        // preventries.append(cause it's now an array) every time you hit done
+        // can i then make up a key on the spot for each pageURL?
+        // it'd have to load it then, otherwise just return ""
+        if let dataToSave   = try? jsonEncoder.encode(previousEntries) {
             let defaults    = UserDefaults.standard
-            defaults.set(dataToSave, forKey: "randomKey")
+            defaults.set(dataToSave, forKey: pageURL)
         } else {
             print("failed to save")
         }
     }
     
     
-    func testLoad() {
+    func loadEntries() {
         let defaults            = UserDefaults.standard
-        if let dataToLoad       = defaults.object(forKey: "randomKey") as? Data {
+        if let dataToLoad       = defaults.object(forKey: pageURL) as? Data {
             let jsonDecoder     = JSONDecoder()
             do {
-                previousEntry   = try jsonDecoder.decode(String.self, from: dataToLoad)
+                previousEntries = try jsonDecoder.decode(String.self, from: dataToLoad)
             } catch {
                 print("failed to load")
             }
