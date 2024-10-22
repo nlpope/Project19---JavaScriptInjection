@@ -25,7 +25,9 @@ class ActionViewController: UIViewController {
     
     
     func setUpNavigation() {
-        navigationItem.rightBarButtonItem   = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        let doneItem                        = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(done))
+        let autoScriptItem                  = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(autoScript))
+        navigationItem.rightBarButtonItems  = [doneItem, autoScriptItem]
     }
     
     
@@ -58,6 +60,25 @@ class ActionViewController: UIViewController {
         item.attachments                = [customJavaScript]
         
         extensionContext?.completeRequest(returningItems: [item])
+    }
+    
+    
+    @IBAction func autoScript() {
+        let msg                         = "select a prewritten script to execute."
+        let ac                          = UIAlertController(title: "Pick A Script", message: "select", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Show Page Title", style: .default, handler: { [weak self] _ in
+            guard let self              = self else { return }
+            self.script.text            = "alert(document.title)"
+        }))
+        ac.addAction(UIAlertAction(title: "Redirect To Google", style: .default, handler: { [weak self] _ in
+            guard let self              = self else { return }
+            self.script.text            = "window.location.href = \"https://www.google.com\""
+        })) 
+        ac.addAction(UIAlertAction(title: "Redirect To YouTube", style: .default, handler: { [weak self] _ in
+            guard let self              = self else { return }
+            self.script.text            = "window.location.href = \"https://www.youtube.com\""
+        }))
+        present(ac, animated: true)
     }
     
     
