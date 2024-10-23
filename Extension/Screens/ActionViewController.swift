@@ -27,7 +27,8 @@ class ActionViewController: UIViewController {
     func setUpNavigation() {
         let doneItem                        = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(done))
         let autoScriptItem                  = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(autoScript))
-        navigationItem.rightBarButtonItems  = [doneItem, autoScriptItem]
+        let customScriptsItem               = UIBarButtonItem(image: SFSymbols.book, style: .plain, target: self, action: #selector(presentCustomScripts))
+        navigationItem.rightBarButtonItems  = [doneItem, autoScriptItem, customScriptsItem]
     }
     
     
@@ -54,7 +55,7 @@ class ActionViewController: UIViewController {
     }
 
     
-    @IBAction func done() {
+    @objc func done() {
         // Return any edited content to the host app (Safari).
         // 2nd issue was here: I was appending a duplicate to previousEntries again instead of just setting it bare.
         // ... necessary for when commands are keyed instead of selected from the autoScript()
@@ -70,7 +71,7 @@ class ActionViewController: UIViewController {
     }
     
     
-    @IBAction func autoScript() {
+    @objc func autoScript() {
         let msg                         = "select a prewritten script to execute."
         let ac                          = UIAlertController(title: "Pick A Script", message: msg, preferredStyle: .alert)
         //how to append onto an existing string?
@@ -95,6 +96,12 @@ class ActionViewController: UIViewController {
             self.script.text            = previousEntries
         }))
         present(ac, animated: true)
+    }
+    
+    
+    @objc func presentCustomScripts() {
+        let destVC = UserScriptsVC()
+        navigationController?.pushViewController(destVC, animated: true)
     }
     
     
