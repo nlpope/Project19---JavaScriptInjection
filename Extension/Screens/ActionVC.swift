@@ -100,7 +100,8 @@ class ActionVC: UIViewController {
     
     
     @objc func presentCustomScripts() {
-        let destVC = UserScriptsVC()
+        let destVC                      = UserScriptsVC()
+        destVC.delegate                 = self
         navigationController?.pushViewController(destVC, animated: true)
     }
     
@@ -132,10 +133,6 @@ class ActionVC: UIViewController {
     
     func saveEntries() {
         let jsonEncoder     = JSONEncoder()
-        // preventries: String?
-        // preventries.append(cause it's now an array) every time you hit done
-        // can i then make up a key on the spot for each pageURL?
-        // it'd have to load it then, otherwise just return ""
         if let dataToSave   = try? jsonEncoder.encode(previousEntries) {
             let defaults    = UserDefaults.standard
             defaults.set(dataToSave, forKey: pageURL)
@@ -155,5 +152,14 @@ class ActionVC: UIViewController {
                 print("failed to load")
             }
         }
+    }
+}
+
+
+// MARK: UserScripts Delegate Methods
+extension ActionVC: UserScriptsVCDelegate {
+    func apply(userScript script: String) {
+        previousEntries.append(script)
+        self.script.text                = previousEntries
     }
 }

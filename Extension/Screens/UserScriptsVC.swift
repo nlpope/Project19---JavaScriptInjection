@@ -7,11 +7,16 @@
 
 import UIKit
 
+protocol UserScriptsVCDelegate: AnyObject {
+    func apply(userScript script: String)
+}
+
 class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let tableView       = UITableView()
     let reuseID         = "cellWithSubtitle"
     var scriptOptions   = [String]()
+    weak var delegate: UserScriptsVCDelegate!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,5 +82,11 @@ class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         }
         
         return cell
+    }
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate.apply(userScript: "\nwindow.location.href = \"https://www.linkedin.com\"")
+        //dismiss this vc
     }
 }
