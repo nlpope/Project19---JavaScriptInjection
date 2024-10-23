@@ -1,5 +1,5 @@
 //
-//  ActionViewController.swift
+//  ActionVC.swift
 //  Extension
 //
 //  Created by Noah Pope on 10/11/24.
@@ -9,7 +9,7 @@ import UIKit
 import MobileCoreServices
 import UniformTypeIdentifiers
 
-class ActionViewController: UIViewController {
+class ActionVC: UIViewController {
 
     @IBOutlet var script: UITextView!
     var pageTitle       = ""

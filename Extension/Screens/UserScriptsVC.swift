@@ -10,6 +10,7 @@ import UIKit
 class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let tableView       = UITableView()
+    let reuseID         = "cellWithSubtitle"
     var scriptOptions   = [String]()
     
     override func viewDidLoad() {
@@ -32,7 +33,7 @@ class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         tableView.frame         = view.bounds
         tableView.delegate      = self
         tableView.dataSource    = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseID)
     }
     
     
@@ -48,8 +49,32 @@ class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell                = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.backgroundColor    = .systemBackground
+        var cell                                    = tableView.dequeueReusableCell(withIdentifier: reuseID, for: indexPath)
+        cell                                        = UITableViewCell(style: .subtitle, reuseIdentifier: reuseID)
+        
+        if #available(iOS 14.0, *) {
+            var config                              = cell.defaultContentConfiguration()
+            config.text                             = "description NEW in iOS 14"
+            config.textProperties.font              = UIFont.systemFont(ofSize: 14)
+            config.textProperties.color             = .black
+            
+            config.secondaryText                    = "the scriptz NEW in iOS 14"
+            config.secondaryTextProperties.font     = UIFont.systemFont(ofSize: 10)
+            config.secondaryTextProperties.color    = .gray
+            
+            cell.contentConfiguration               = config
+            
+        } else {
+            print("else statement reached for cellz")
+            cell.textLabel?.text                    = "description"
+            cell.textLabel?.font                    = UIFont.systemFont(ofSize: 14)
+            cell.textLabel?.textColor               = .black
+            
+            cell.detailTextLabel?.text              = "the script"
+            cell.detailTextLabel?.font              = UIFont.systemFont(ofSize: 10)
+            cell.detailTextLabel?.textColor         = .gray
+            
+        }
         
         return cell
     }
