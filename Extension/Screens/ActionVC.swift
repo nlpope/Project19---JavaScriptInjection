@@ -72,8 +72,8 @@ class ActionVC: UIViewController {
     
     
     @objc func autoScript() {
-        let msg                         = "select a prewritten script to execute."
-        let ac                          = UIAlertController(title: "Pick A Script", message: msg, preferredStyle: .alert)
+        let message                     = "select a prewritten script to execute."
+        let ac                          = UIAlertController(title: "Pick A Script", message: message, preferredStyle: .alert)
         //how to append onto an existing string?
         ac.addAction(UIAlertAction(title: "Show Page Title", style: .default, handler: { [weak self] _ in
             guard let self              = self else { return }
@@ -160,6 +160,7 @@ class ActionVC: UIViewController {
 extension ActionVC: UserScriptsVCDelegate {
     func apply(userScript script: String) {
         previousEntries.append(script)
-        self.script.text                = previousEntries
+        self.script.text    = previousEntries
+        saveEntries()
     }
 }

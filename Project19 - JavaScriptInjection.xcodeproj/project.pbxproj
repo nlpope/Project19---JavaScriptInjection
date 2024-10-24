@@ -22,6 +22,7 @@
 		407E8B7F2CBA3BCD00D58055 /* Action.js in Resources */ = {isa = PBXBuildFile; fileRef = 407E8B7E2CBA3BCD00D58055 /* Action.js */; };
 		407E8BC02CC93A0200D58055 /* Constants+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407E8BBF2CC93A0200D58055 /* Constants+Utils.swift */; };
 		407E8BC42CC93BA200D58055 /* UserScriptsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407E8BBD2CC81F3F00D58055 /* UserScriptsVC.swift */; };
+		407E8BC62CCA9DED00D58055 /* UIAlertController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407E8BC52CCA9DEC00D58055 /* UIAlertController+Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		407E8B7E2CBA3BCD00D58055 /* Action.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Action.js; sourceTree = "<group>"; };
 		407E8BBD2CC81F3F00D58055 /* UserScriptsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserScriptsVC.swift; sourceTree = "<group>"; };
 		407E8BBF2CC93A0200D58055 /* Constants+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Constants+Utils.swift"; sourceTree = "<group>"; };
+		407E8BC52CCA9DEC00D58055 /* UIAlertController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,12 +135,13 @@
 		407E8B6E2CBA30A300D58055 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				407E8B6F2CBA30A300D58055 /* Media.xcassets */,
+				407E8BC72CCA9EB600D58055 /* Extensions */,
 				407E8BC12CC93A0A00D58055 /* Utilities */,
-				407E8B732CBA30A300D58055 /* MainInterface.storyboard */,
 				407E8BC22CC93AE700D58055 /* Screens */,
+				407E8B732CBA30A300D58055 /* MainInterface.storyboard */,
 				407E8B762CBA30A300D58055 /* Info.plist */,
 				407E8B7E2CBA3BCD00D58055 /* Action.js */,
+				407E8B6F2CBA30A300D58055 /* Media.xcassets */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -166,6 +169,14 @@
 				407E8B532CBA2E7E00D58055 /* ViewController.swift */,
 			);
 			path = Screens;
+			sourceTree = "<group>";
+		};
+		407E8BC72CCA9EB600D58055 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				407E8BC52CCA9DEC00D58055 /* UIAlertController+Ext.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -283,6 +294,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				407E8BC62CCA9DED00D58055 /* UIAlertController+Ext.swift in Sources */,
 				407E8B722CBA30A300D58055 /* ActionVC.swift in Sources */,
 				407E8BC42CC93BA200D58055 /* UserScriptsVC.swift in Sources */,
 				407E8BC02CC93A0200D58055 /* Constants+Utils.swift in Sources */,
