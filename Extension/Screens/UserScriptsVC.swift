@@ -16,6 +16,7 @@ class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     let tableView       = UITableView()
     let reuseID         = "cellWithSubtitle"
     var scriptList      = [String:String]()
+    var newScript       = ""
     weak var delegate: UserScriptsVCDelegate!
     
     override func viewDidLoad() {
@@ -43,16 +44,17 @@ class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     
     @objc func addCustomScript() {
-        let message                                 = "Create a script and give it a name for quick selects when using this extension"
+        let message                                 = "Create a script and give it a name for quick selects when using this extension. Be sure to use unique descriptions"
         let ac                                      = UIAlertController(title: "Add A Script", message: message, preferredStyle: .alert)
         ac.addTextField()
         ac.addTextField()
-        ac.textFields?[0].placeholder               = "enter description here"
+        ac.textFields?[0].placeholder               = "enter unique description here"
         ac.textFields?[1].placeholder               = "enter JavaScript here"
         
         let saveAction                              = UIAlertAction(title: "Save", style: .default) { [weak self] _ in
             guard let self                          = self else { return }
             guard let scriptDescript                = ac.textFields?[0].text else {
+                // text fields not turning red on empty
                 ac.textFields?[0].backgroundColor   = .red
                 return
             }
@@ -61,6 +63,8 @@ class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
                 return
             }
             self.scriptList[scriptDescript]         = scriptCode
+            self.newScript                          = scriptDescript
+            // save
             tableView.reloadData()
         }
         
@@ -81,42 +85,41 @@ class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell                                        = tableView.dequeueReusableCell(withIdentifier: reuseID, for: indexPath)
-        cell                                            = UITableViewCell(style: .subtitle, reuseIdentifier: reuseID)
+        var cell                                            = tableView.dequeueReusableCell(withIdentifier: reuseID, for: indexPath)
+        var scriptListKeysArray                             = Array(scriptList.keys)
+        var scriptListValuesArray                           = Array(scriptList.values)
+        cell                                                = UITableViewCell(style: .subtitle, reuseIdentifier: reuseID)
+        scriptListKeysArray.sort()
         
         if #available(iOS 14.0, *) {
-            var config                                  = cell.defaultContentConfiguration()
-            var scriptListKeysArray                     = Array(scriptList.keys)
-            var scriptListValuesArray                   = Array(scriptList.values)
-            print(scriptListKeysArray)
-            print(scriptListValuesArray)
+            var config                                      = cell.defaultContentConfiguration()
             
-            for scriptKey in scriptListKeysArray {
-                
-            }
-            config.text                             = scriptListKeysArray[indexPath.row]
-            config.textProperties.font              = UIFont.systemFont(ofSize: 14)
-            config.textProperties.color             = .black
+            config.text                                     = scriptListKeysArray[indexPath.row]
+            config.textProperties.font                      = UIFont.systemFont(ofSize: 14)
+            config.textProperties.color                     = .black
             
-            config.secondaryText                    = scriptListValuesArray[indexPath.row]
-            config.secondaryTextProperties.font     = UIFont.systemFont(ofSize: 10)
-            config.secondaryTextProperties.color    = .gray
+            config.secondaryText                            = scriptListValuesArray[indexPath.row]
+            config.secondaryTextProperties.font             = UIFont.systemFont(ofSize: 12)
+            config.secondaryTextProperties.color            = .gray
             
-            cell.contentConfiguration               = config
-            
+            cell.contentConfiguration                       = config
         } else {
-            print("else statement reached for cellz")
-            for (scriptKey,scriptValue) in scriptList {
-                cell.textLabel?.text                        = scriptKey
-                cell.textLabel?.font                        = UIFont.systemFont(ofSize: 14)
-                cell.textLabel?.textColor                   = .black
-                    
-                cell.detailTextLabel?.text                  = scriptValue
-                cell.detailTextLabel?.font                  = UIFont.systemFont(ofSize: 10)
-                cell.detailTextLabel?.textColor             = .gray
-            }
+            cell.textLabel?.text                        = scriptListKeysArray[indexPath.row]
+            cell.textLabel?.font                        = UIFont.systemFont(ofSize: 14)
+            cell.textLabel?.textColor                   = .black
+                
+            cell.detailTextLabel?.text                  = scriptListValuesArray[indexPath.row]
+            cell.detailTextLabel?.font                  = UIFont.systemFont(ofSize: 12)
+            cell.detailTextLabel?.textColor             = .gray
         }
         
+        // now quickly select & deselect since it's been alphabetized
+        // .contains(the thing I'll populate in an empty string up top)
+//        if cell.isSelected == true { cell.isSelected    = false}
+//        if scriptListKeysArray[indexPath.row].contains(newScript) {
+//            cell.isSelected                             = true
+//            newScript                                   = ""
+//        }
         return cell
     }
     
