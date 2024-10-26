@@ -13,10 +13,10 @@ protocol UserScriptsVCDelegate: AnyObject {
 
 class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    let tableView       = UITableView()
-    let reuseID         = "cellWithSubtitle"
-    var scriptList      = [String:String]()
-    var newScript       = ""
+    let tableView   = UITableView()
+    let reuseID     = "cellWithSubtitle"
+    var scriptList  = [String:String]()
+    var scriptListKeys  = [String]()
     weak var delegate: UserScriptsVCDelegate!
     
     override func viewDidLoad() {
@@ -63,7 +63,8 @@ class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
                 return
             }
             self.scriptList[scriptDescript]         = scriptCode
-            self.newScript                          = scriptDescript
+            scriptListKeys                          = Array(scriptList.keys).sorted()
+            print(scriptListKeys)
             // save
             tableView.reloadData()
         }
@@ -80,52 +81,44 @@ class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     // MARK: TABLEVIEW METHODS
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return scriptList.count
+        return scriptListKeys.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell                                            = tableView.dequeueReusableCell(withIdentifier: reuseID, for: indexPath)
-        var scriptListKeysArray                             = Array(scriptList.keys)
-        var scriptListValuesArray                           = Array(scriptList.values)
+        let targetKey                                       = scriptListKeys[indexPath.row]
         cell                                                = UITableViewCell(style: .subtitle, reuseIdentifier: reuseID)
-        scriptListKeysArray.sort()
         
         if #available(iOS 14.0, *) {
             var config                                      = cell.defaultContentConfiguration()
-            
-            config.text                                     = scriptListKeysArray[indexPath.row]
+            // scriptListKeys[indexPath.row] = "navYT"
+            config.text                                     = targetKey
             config.textProperties.font                      = UIFont.systemFont(ofSize: 14)
             config.textProperties.color                     = .black
             
-            config.secondaryText                            = scriptListValuesArray[indexPath.row]
+            config.secondaryText                            = scriptList[targetKey]
             config.secondaryTextProperties.font             = UIFont.systemFont(ofSize: 12)
             config.secondaryTextProperties.color            = .gray
             
             cell.contentConfiguration                       = config
         } else {
-            cell.textLabel?.text                        = scriptListKeysArray[indexPath.row]
+            cell.textLabel?.text                        = targetKey
             cell.textLabel?.font                        = UIFont.systemFont(ofSize: 14)
             cell.textLabel?.textColor                   = .black
                 
-            cell.detailTextLabel?.text                  = scriptListValuesArray[indexPath.row]
+            cell.detailTextLabel?.text                  = scriptList[targetKey]
             cell.detailTextLabel?.font                  = UIFont.systemFont(ofSize: 12)
             cell.detailTextLabel?.textColor             = .gray
         }
-        
-        // now quickly select & deselect since it's been alphabetized
-        // .contains(the thing I'll populate in an empty string up top)
-//        if cell.isSelected == true { cell.isSelected    = false}
-//        if scriptListKeysArray[indexPath.row].contains(newScript) {
-//            cell.isSelected                             = true
-//            newScript                                   = ""
-//        }
+    
         return cell
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate.apply(userScript: "\nwindow.location.href = \"https://www.linkedin.com\"")
+        let targetKey   = scriptListKeys[indexPath.row]
+        delegate.apply(userScript: scriptList[targetKey] ?? "unknown")
         self.navigationController?.popViewController(animated: true)
     }
 }

@@ -74,27 +74,30 @@ class ActionVC: UIViewController {
     @objc func autoScript() {
         let message                     = "select a prewritten script to execute."
         let ac                          = UIAlertController(title: "Pick A Script", message: message, preferredStyle: .alert)
-        //how to append onto an existing string?
-        ac.addAction(UIAlertAction(title: "Show Page Title", style: .default, handler: { [weak self] _ in
+        
+        let showPageTitleAction         = UIAlertAction(title: "Show Page Title", style: .default, handler: { [weak self] _ in
             guard let self              = self else { return }
             self.previousEntries.append("\nalert(document.title)")
             self.script.text            = previousEntries
-        }))
-        ac.addAction(UIAlertAction(title: "Redirect To Google", style: .default, handler: { [weak self] _ in
+        })
+        let redirectToGoogleAction      = UIAlertAction(title: "Redirect To Google", style: .default, handler: { [weak self] _ in
             guard let self              = self else { return }
             self.previousEntries.append("\nwindow.location.href = \"https://www.google.com\"")
             self.script.text            = previousEntries
-        }))
-        ac.addAction(UIAlertAction(title: "Redirect To YouTube", style: .default, handler: { [weak self] _ in
+        })
+        let redirectToYoutubeAction     = UIAlertAction(title: "Redirect To YouTube", style: .default, handler: { [weak self] _ in
             guard let self              = self else { return }
             self.previousEntries.append("\nwindow.location.href = \"https://www.youtube.com\"")
             self.script.text            = previousEntries
-        }))
-        ac.addAction(UIAlertAction(title: "Redirect To GitHub", style: .default, handler: { [weak self] _ in
+        })
+        let redirectToGithubAction      = UIAlertAction(title: "Redirect To GitHub", style: .default, handler: { [weak self] _ in
             guard let self              = self else { return }
             self.previousEntries.append("\nwindow.location.href = \"https://www.github.com\"")
             self.script.text            = previousEntries
-        }))
+        })
+        let cancelAction                = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        ac.addActions(showPageTitleAction, redirectToGoogleAction, redirectToYoutubeAction, redirectToGithubAction, cancelAction)
         present(ac, animated: true)
     }
     
@@ -159,7 +162,7 @@ class ActionVC: UIViewController {
 // MARK: UserScripts Delegate Methods
 extension ActionVC: UserScriptsVCDelegate {
     func apply(userScript script: String) {
-        previousEntries.append(script)
+        previousEntries.append("\n\(script)")
         self.script.text    = previousEntries
         saveEntries()
     }
