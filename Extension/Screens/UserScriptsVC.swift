@@ -13,15 +13,16 @@ protocol UserScriptsVCDelegate: AnyObject {
 
 class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    let tableView   = UITableView()
-    let reuseID     = "cellWithSubtitle"
-    var scriptList  = [String:String]()
+    let tableView       = UITableView()
+    let reuseID         = "cellWithSubtitle"
+    var scriptList      = [String:String]()
     var scriptListKeys  = [String]()
     weak var delegate: UserScriptsVCDelegate!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigation()
+        loadScriptList()
         configureTableView()
     }
     
@@ -53,19 +54,21 @@ class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         let saveAction                              = UIAlertAction(title: "Save", style: .default) { [weak self] _ in
             guard let self                          = self else { return }
-            guard let scriptDescript                = ac.textFields?[0].text else {
-                // text fields not turning red on empty
+            guard ac.textFields?[0].hasText != nil else {
                 ac.textFields?[0].backgroundColor   = .red
                 return
-            }
-            guard let scriptCode                    = ac.textFields?[1].text else {
-                ac.textFields?[1].tintColor         = .red
+            } 
+            guard ac.textFields?[1].hasText != nil else {
+                ac.textFields?[1].backgroundColor   = .red
                 return
             }
-            self.scriptList[scriptDescript]         = scriptCode
+            
+            let scriptDescript                      = ac.textFields?[0].text
+            let scriptCode                          = ac.textFields?[1].text
+            
+            self.scriptList[scriptDescript!]        = scriptCode
             scriptListKeys                          = Array(scriptList.keys).sorted()
-            print(scriptListKeys)
-            // save
+            saveScriptList()
             tableView.reloadData()
         }
         
@@ -76,7 +79,29 @@ class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
     
     
-    #warning("add save/load funcs")
+    func saveScriptList() {
+        let jsonEncoder     = JSONEncoder()
+        if let encodedData  = try? jsonEncoder.encode(scriptList) {
+            let defaults    = UserDefaults.standard
+            defaults.set(encodedData, forKey: SaveKeys.scriptList)
+        } else {
+            print("unable to save scriptList")
+        }
+    }
+    
+    
+    func loadScriptList() {
+        let defaults            = UserDefaults.standard
+        if let dataToDecode     = defaults.object(forKey: SaveKeys.scriptList) as? Data {
+            let jsonDecoder     = JSONDecoder()
+            do {
+                scriptList      = try jsonDecoder.decode([String:String].self, from: dataToDecode)
+            } catch {
+                print("could not load data")
+            }
+            scriptListKeys  = Array(scriptList.keys).sorted()
+        }
+    }
 
     
     // MARK: TABLEVIEW METHODS
@@ -103,13 +128,13 @@ class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
             
             cell.contentConfiguration                       = config
         } else {
-            cell.textLabel?.text                        = targetKey
-            cell.textLabel?.font                        = UIFont.systemFont(ofSize: 14)
-            cell.textLabel?.textColor                   = .black
+            cell.textLabel?.text                            = targetKey
+            cell.textLabel?.font                            = UIFont.systemFont(ofSize: 14)
+            cell.textLabel?.textColor                       = .black
                 
-            cell.detailTextLabel?.text                  = scriptList[targetKey]
-            cell.detailTextLabel?.font                  = UIFont.systemFont(ofSize: 12)
-            cell.detailTextLabel?.textColor             = .gray
+            cell.detailTextLabel?.text                      = scriptList[targetKey]
+            cell.detailTextLabel?.font                      = UIFont.systemFont(ofSize: 12)
+            cell.detailTextLabel?.textColor                 = .gray
         }
     
         return cell

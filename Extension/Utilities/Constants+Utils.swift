@@ -8,5 +8,9 @@
 import UIKit
 
 enum SFSymbols {
-    static let book     = UIImage(systemName: "book.fill")
+    static let book         = UIImage(systemName: "book.fill")
+}
+
+enum SaveKeys {
+    static let scriptList   = "scriptList"
 }
