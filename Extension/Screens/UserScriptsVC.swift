@@ -54,6 +54,7 @@ class UserScriptsVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         let saveAction                              = UIAlertAction(title: "Save", style: .default) { [weak self] _ in
             guard let self                          = self else { return }
+            #warning("test empty textfield behavior")
             guard ac.textFields?[0].hasText != nil else {
                 ac.textFields?[0].backgroundColor   = .red
                 return
