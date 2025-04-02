@@ -9,14 +9,15 @@ import UIKit
 import MobileCoreServices
 import UniformTypeIdentifiers
 
-class ActionVC: UIViewController {
-
+class ActionVC: UIViewController
+{
     @IBOutlet var script: UITextView!
     var pageTitle       = ""
     var pageURL         = ""
     var previousEntries = ""
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
         setUpNavigation()
         pullJavaScriptValues()
@@ -24,7 +25,8 @@ class ActionVC: UIViewController {
     }
     
     
-    func setUpNavigation() {
+    func setUpNavigation()
+    {
         let doneItem                        = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(done))
         let autoScriptItem                  = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(autoScript))
         let customScriptsItem               = UIBarButtonItem(image: SFSymbols.book, style: .plain, target: self, action: #selector(presentCustomScripts))
@@ -32,7 +34,8 @@ class ActionVC: UIViewController {
     }
     
     
-    func pullJavaScriptValues() {
+    func pullJavaScriptValues()
+    {
         if let inputItem = extensionContext?.inputItems.first as? NSExtensionItem {
             if let itemProvider = inputItem.attachments?.first {
                 //kUTTypePropertyList
@@ -55,7 +58,8 @@ class ActionVC: UIViewController {
     }
 
     
-    @objc func done() {
+    @objc func done()
+    {
         // Return any edited content to the host app (Safari).
         // 2nd issue was here: I was appending a duplicate to previousEntries again instead of just setting it bare.
         // ... necessary for when commands are keyed instead of selected from the autoScript()
@@ -71,7 +75,8 @@ class ActionVC: UIViewController {
     }
     
     
-    @objc func autoScript() {
+    @objc func autoScript()
+    {
         let message                     = "select a prewritten script to execute."
         let ac                          = UIAlertController(title: "Pick A Script", message: message, preferredStyle: .alert)
         
@@ -102,22 +107,26 @@ class ActionVC: UIViewController {
     }
     
     
-    @objc func presentCustomScripts() {
+    @objc func presentCustomScripts()
+    {
         let destVC                      = UserScriptsVC()
         destVC.delegate                 = self
         navigationController?.pushViewController(destVC, animated: true)
     }
     
     
-    func setUpKeyboardNotifications() {
+    func setUpKeyboardNotifications()
+    {
         let notificationCenter  = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     
-    @objc func adjustForKeyboard(notification: Notification) {
-        guard let keyboardValue         = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+    @objc func adjustForKeyboard(notification: Notification)
+    {
+        guard let keyboardValue         = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
+        else { return }
         let keyboardScreenEndFrame      = keyboardValue.cgRectValue
         let keyboardViewEndFrame        = view.convert(keyboardScreenEndFrame, from: view.window)
         
@@ -130,38 +139,36 @@ class ActionVC: UIViewController {
         
         let selectedRange               = script.selectedRange
         script.scrollRangeToVisible(selectedRange)
-        
     }
     
     
-    func saveEntries() {
+    func saveEntries()
+    {
         let jsonEncoder     = JSONEncoder()
         if let dataToSave   = try? jsonEncoder.encode(previousEntries) {
             let defaults    = UserDefaults.standard
             defaults.set(dataToSave, forKey: pageURL)
-        } else {
-            print("failed to save")
-        }
+        } else { print("failed to save") }
     }
     
     
-    func loadEntries() {
+    func loadEntries()
+    {
         let defaults            = UserDefaults.standard
         if let dataToLoad       = defaults.object(forKey: pageURL) as? Data {
             let jsonDecoder     = JSONDecoder()
-            do {
-                previousEntries = try jsonDecoder.decode(String.self, from: dataToLoad)
-            } catch {
-                print("failed to load")
-            }
+            do { previousEntries = try jsonDecoder.decode(String.self, from: dataToLoad) }
+            catch { print("failed to load") }
         }
     }
 }
 
 
 // MARK: UserScripts Delegate Methods
-extension ActionVC: UserScriptsVCDelegate {
-    func apply(userScript script: String) {
+extension ActionVC: UserScriptsVCDelegate
+{
+    func apply(userScript script: String)
+    {
         previousEntries.append("\n\(script)")
         self.script.text    = previousEntries
         saveEntries()
