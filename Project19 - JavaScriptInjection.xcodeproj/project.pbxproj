@@ -112,14 +112,9 @@
 		407E8B4E2CBA2E7E00D58055 /* Project19 - JavaScriptInjection */ = {
 			isa = PBXGroup;
 			children = (
-				407E8B4F2CBA2E7E00D58055 /* AppDelegate.swift */,
-				407E8B512CBA2E7E00D58055 /* SceneDelegate.swift */,
-				407E8B5D2CBA2E8500D58055 /* LaunchScreen.storyboard */,
-				407E8B552CBA2E7E00D58055 /* Main.storyboard */,
 				407E8BC32CC93AFA00D58055 /* Screens */,
-				407E8B5B2CBA2E8500D58055 /* Assets.xcassets */,
+				40B771D92D9DA3E500F64D3D /* Support */,
 				407E8B602CBA2E8500D58055 /* Info.plist */,
-				407E8B582CBA2E7E00D58055 /* Project19___JavaScriptInjection.xcdatamodeld */,
 			);
 			path = "Project19 - JavaScriptInjection";
 			sourceTree = "<group>";
@@ -139,9 +134,9 @@
 				407E8BC12CC93A0A00D58055 /* Utilities */,
 				407E8BC22CC93AE700D58055 /* Screens */,
 				407E8B732CBA30A300D58055 /* MainInterface.storyboard */,
-				407E8B762CBA30A300D58055 /* Info.plist */,
 				407E8B7E2CBA3BCD00D58055 /* Action.js */,
 				407E8B6F2CBA30A300D58055 /* Media.xcassets */,
+				407E8B762CBA30A300D58055 /* Info.plist */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -177,6 +172,19 @@
 				407E8BC52CCA9DEC00D58055 /* UIAlertController+Ext.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		40B771D92D9DA3E500F64D3D /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				407E8B4F2CBA2E7E00D58055 /* AppDelegate.swift */,
+				407E8B512CBA2E7E00D58055 /* SceneDelegate.swift */,
+				407E8B552CBA2E7E00D58055 /* Main.storyboard */,
+				407E8B5D2CBA2E8500D58055 /* LaunchScreen.storyboard */,
+				407E8B5B2CBA2E8500D58055 /* Assets.xcassets */,
+				407E8B582CBA2E7E00D58055 /* Project19___JavaScriptInjection.xcdatamodeld */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

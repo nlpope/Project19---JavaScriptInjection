@@ -7,10 +7,12 @@
 
 import UIKit
 
-enum SFSymbols {
+enum SFSymbols
+{
     static let book         = UIImage(systemName: "book.fill")
 }
 
-enum SaveKeys {
+enum SaveKeys
+{
     static let scriptList   = "scriptList"
 }
